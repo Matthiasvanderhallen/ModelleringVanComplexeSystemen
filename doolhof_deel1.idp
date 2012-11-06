@@ -44,53 +44,38 @@ theory deel1Theo: deel1Voc{
 	* 1. General action limitation	*
 	********************************/
 	
+	?=<1 action: Do(action).
 
 	/********************************
 	*	ACTIONS -- Limitations		*
 	* 2. Walking					*
 	********************************/
 	
+	!room : NewRoom(room) => Do(Go).
+	Do(Go) => ?1 room: NewRoom(room).
+	!room : (Do(Go) & NewRoom(room)) => ?door room2: (PersonIn(room2) & IsOpen(door) & (Links(door, room, room2) | Links(door, room2, room))).
 
 	/********************************
 	*	ACTIONS -- Limitations		*
 	* 3. Opening and closing		*
 	********************************/
 	
+	Do(Close) => ?1 door : ClosedDoor(door).
+	!door : ClosedDoor(door) => Do(Close).
+	!door : (Do(Close) & ClosedDoor(door)) => ? room2 key room: (IsOpen(door) & PersonIn(room) & Has(key) & Fits(key, door) & (Links(door, room, room2) | Links(door, room2, room))).
+	
+	Do(Open) => ?1 door: OpenedDoor(door).
+	!door : OpenedDoor(door) => Do(Open).
+	!door : (Do(Open) & OpenedDoor(door) ) => ? room2 key room: (~IsOpen(door) & PersonIn(room) & Has(key) & Fits(key, door) & (Links(door, room, room2) | Links(door, room2, room))).
 	
 	/********************************
 	*	ACTIONS -- Limitations		*
 	* 4. Pickup and Drop			*
 	********************************/
-	//! Key : Has(Key) => ~Do(PickUp).
-	//
-	//Do(PickUp) => ?Room:?Key : (PersonIn(Room) & KeyIn(Key, Room) & HasAfter(Key)).
-	//Do(PickUp) & HasAfter(key) => (PersonIn(room) & KeyIn(key,room)).
-	//~Do(PickUp) => ~? key : HasAfter(key).
-	//Do(PickUp) & Key(key) & PersonIn(room) & KeyIn(key,room).
-	//Do(PickUp) : PersonIn(Room)=>  => !key : KeyIn(key, room)).
-	//Do(Drop) => ? key : Has(key).
-	
-	//(~Do(action) & action = pickup) => ~! key : HasAfter(key).
-	
-	//?=<1 key : Has(key).
-	
-	?=<1 key : HasAfter(key).
-	Do(PickUp) <=> ?1 key : HasAfter(key).
+	Do(PickUp) => ?1 key : HasAfter(key).
+	!key : HasAfter(key) => Do(PickUp).
 	Do(PickUp) => ~? key : Has(key).
-	//(Do(PickUp) & PersonIn(room) & KeyIn(key,room)) => ?key1 : HasAfter(key1).
-	(Do(PickUp) & HasAfter(key)) => ?room:PersonIn(room) & KeyIn(key,room).
+	!key : (Do(PickUp) & HasAfter(key)) => ?room:PersonIn(room) & KeyIn(key,room).
 	
 	Do(Drop) => ?key : Has(key).
-	
-	NewRoom(room) => Do(Go).
-	Do(Go) => ?1 room: NewRoom(room).
-	(Do(Go) & NewRoom(room)) => ?door room2: (PersonIn(room2) & IsOpen(door) & (Links(door, room, room2) | Links(door, room2, room))).
-	
-	Do(Close) => ?1 door : ClosedDoor(door).
-	ClosedDoor(door) => Do(Close).
-	(Do(Close) & ClosedDoor(door)) => ? room2 key room: (PersonIn(room) & Has(key) & Fits(key, door) & (Links(door, room, room2) | Links(door, room2, room))).
-	
-	Do(Open) => ?1 door: OpenedDoor(door).
-	OpenedDoor(door) => Do(Open).
-	(Do(Open) & OpenedDoor(door) ) => ? room2 key room: (PersonIn(room) & Has(key) & Fits(key, door) & (Links(door, room, room2) | Links(door, room2, room))).
 }

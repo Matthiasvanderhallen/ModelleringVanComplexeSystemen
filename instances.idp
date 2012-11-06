@@ -145,6 +145,52 @@ Action = { open; close; go; pickup; drop}
 	Has={ka}
 }
 
+structure vb7 : deel1Voc{
+Action = { open; close; go; pickup; drop}
+	//Set all constants to the correct domain element
+	Open = open
+	Close = close
+	Go = go
+	PickUp = pickup
+	Drop = drop
+	
+	
+	Room = {A..B}
+	Door = {a}
+	Key = {ka;}
+	
+	Links = {a,A,B;}
+	Fits = {ka,a}
+	IsOpen = {a}
+	
+	PersonIn = {B}
+	KeyIn= {ka,B}
+	Has={ka}
+}
+
+structure vb8 : deel1Voc{
+Action = { open; close; go; pickup; drop}
+	//Set all constants to the correct domain element
+	Open = open
+	Close = close
+	Go = go
+	PickUp = pickup
+	Drop = drop
+	
+	
+	Room = {A..B}
+	Door = {a}
+	Key = {ka;}
+	
+	Links = {a,A,B;}
+	Fits = {ka,a}
+	IsOpen = {}
+	
+	PersonIn = {B}
+	KeyIn= {ka,B}
+	Has={ka}
+}
+
 structure pickup : deel1Voc{
 	Action = { open; close; go; pickup; drop}
 	Do={pickup}
@@ -184,6 +230,8 @@ procedure check(){
 	
 	//Pickup or no action are allowed. The rest cannot be set
 	checkOneInstance(vb1,"vb1",2)
+	
+	checkOneInstance(vb6,"vb6",7) //1 mogelijkheid tot Drop, 2 mogelijkheden bij 'Close', 3 mogelijkheden bij 'Go', en één 'no action'
 	
 	S = merge(vb1,open)
 	checkOneInstance(S,"vb1 with action=open",0)
@@ -229,18 +277,24 @@ procedure check(){
 	
 	S = merge(vb6,close)
 	checkOneInstance(S,"vb6 with action=close",2) //Both doors are closeable.
+	
+	S = merge(vb7,open)
+	checkOneInstance(S,"vb7 with action=open",0) //Geopende deur kan niet nogmaals geopend worden.
+	
+	S = merge(vb8,close)
+	checkOneInstance(S,"vb8 with action=close",0) //Gesloten deur kan niet nogmaals gesloten worden.
 }
 
 procedure checkOneInstance(structure, structurename, nbModelsExpected){
-	stdoptions.nbmodels=nbModelsExpected+1
+	stdoptions.nbmodels=10
 	io.stderr:write("Testing "..structurename.."\n")
 	sols = modelexpand(deel1Theo, structure)
 	if #sols < nbModelsExpected then
-		io.stderr:write("Found not enough models(expected "..nbModelsExpected..") for "..structurename..".\n")
+		io.stderr:write("<!!! Found not enough models(expected "..nbModelsExpected..") for "..structurename..".\n")
 		printmodels(sols)
 	else
 		if #sols > nbModelsExpected then
-			io.stderr:write("Found too much models(expected "..nbModelsExpected..") for "..structurename..".\n")
+			io.stderr:write(">!!! Found too much models(expected "..nbModelsExpected..") for "..structurename..".\n")
 			printmodels(sols)
 		else
 			io.stderr:write("Checks on "..structurename.." succeeded(expected "..nbModelsExpected..")\n")
