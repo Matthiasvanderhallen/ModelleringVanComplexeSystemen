@@ -1,0 +1,251 @@
+//Verschillende voorbeelden
+#include<mx>
+
+structure vb1 : deel1Voc{
+	Action = { open; close; go; pickup; drop}
+	//Set all constants to the correct domain element
+	Open = open
+	Close = close
+	Go = go
+	PickUp = pickup
+	Drop = drop
+	
+	Room = {A..E}
+	Door = {a..d}
+	Key = {ka; kb; kc; kd}
+	
+	Links = {a,A,B; b, B,C; c, B,D; d,D,E}
+	Fits = {ka,a;kb,b;kc,c;kd,d}
+	IsOpen = {}
+	
+	PersonIn = {A}
+	KeyIn= {ka,A; kb,B; kc,C; kd,D}
+	Has={}
+	
+}
+
+//TWO KEYS IN THE SAME ROOM
+structure vb2 : deel1Voc{
+	Action = { open; close; go; pickup; drop}
+	//Set all constants to the correct domain element
+	Open = open
+	Close = close
+	Go = go
+	PickUp = pickup
+	Drop = drop
+	
+	Room = {A..E}
+	Door = {a..d}
+	Key = {ka; kb; kc; kd}
+	
+	Links = {a,A,B; b, B,C; c, B,D; d,D,E}
+	Fits = {ka,a;kb,b;kc,c;kd,d}
+	IsOpen = {}
+	
+	PersonIn = {A}
+	KeyIn= {ka,A; kb,A; kc,C; kd,C}
+	Has={}
+	
+}
+
+//ALL DOORS OPEN
+structure vb3 : deel1Voc{
+	Action = { open; close; go; pickup; drop}
+	//Set all constants to the correct domain element
+	Open = open
+	Close = close
+	Go = go
+	PickUp = pickup
+	Drop = drop
+	
+	Room = {A..E}
+	Door = {a..d}
+	Key = {ka; kb; kc; kd}
+	
+	Links = {a,A,B; b, B,C; c, B,D; d,D,E}
+	Fits = {ka,a;kb,b;kc,c;kd,d}
+	IsOpen = {a..d}
+	
+	PersonIn = {A}
+	KeyIn= {ka,A; kb,A;kc, C; kd,C}
+	Has={}
+	
+}
+
+//ALL DOORS OPEN, key in hand
+structure vb4 : deel1Voc{
+	Action = { open; close; go; pickup; drop}
+	//Set all constants to the correct domain element
+	Open = open
+	Close = close
+	Go = go
+	PickUp = pickup
+	Drop = drop
+	
+	
+	Room = {A..E}
+	Door = {a..d}
+	Key = {ka; kb; kc; kd}
+	
+	Links = {a,A,B; b, B,C; c, B,D; d,D,E}
+	Fits = {ka,a;kb,b;kc,c;kd,d}
+	IsOpen = {a..d}
+	
+	PersonIn = {A}
+	KeyIn= {ka,A; kb,A;kc, C; kd,C}
+	Has={ka}
+	
+}
+
+//Room without key.
+structure vb5 : deel1Voc{
+	Action = { open; close; go; pickup; drop}
+	//Set all constants to the correct domain element
+	Open = open
+	Close = close
+	Go = go
+	PickUp = pickup
+	Drop = drop
+	
+	
+	Room = {A..E}
+	Door = {a..d}
+	Key = {ka; kb; kc; kd}
+	
+	Links = {a,A,B; b, B,C; c, B,D; d,D,E}
+	Fits = {ka,a;kb,b;kc,c;kd,d}
+	IsOpen = {a..d}
+	
+	PersonIn = {A}
+	KeyIn= {ka,B; kb,B;kc, C; kd,C}
+	Has={ka}
+}
+
+//Room with 3 open connections, heeft key, en key past op 2 vd 3 deuren
+structure vb6 : deel1Voc{
+Action = { open; close; go; pickup; drop}
+	//Set all constants to the correct domain element
+	Open = open
+	Close = close
+	Go = go
+	PickUp = pickup
+	Drop = drop
+	
+	
+	Room = {A..E}
+	Door = {a..d}
+	Key = {ka; kb; kc; kd}
+	
+	Links = {a,A,B; b, B,C; c, B,D; d,D,E}
+	Fits = {ka,a;ka,b;kb,b;kc,c;kd,d}
+	IsOpen = {a..d}
+	
+	PersonIn = {B}
+	KeyIn= {ka,B; kb,B;kc, C; kd,C}
+	Has={ka}
+}
+
+structure pickup : deel1Voc{
+	Action = { open; close; go; pickup; drop}
+	Do={pickup}
+}
+
+structure drop : deel1Voc{
+	Action = { open; close; go; pickup; drop}
+	Do={drop}
+}
+
+structure open : deel1Voc{
+	Action = { open; close; go; pickup; drop}
+	Do={open}
+}
+
+structure close : deel1Voc{
+	Action = { open; close; go; pickup; drop}
+	Do={close}
+}
+
+structure go : deel1Voc{
+	Action = { open; close; go; pickup; drop}
+	Do={go}
+}
+
+structure noAction : deel1Voc{
+	Action = { open; close; go; pickup; drop}
+	Do={}
+}
+
+structure twoActions : deel1Voc{
+	Action = { open; close; go; pickup; drop}
+	Do = {drop;open}
+}
+	
+procedure check(){
+	
+	//Pickup or no action are allowed. The rest cannot be set
+	checkOneInstance(vb1,"vb1",2)
+	
+	S = merge(vb1,open)
+	checkOneInstance(S,"vb1 with action=open",0)
+	
+	S = merge(vb1,close)
+	checkOneInstance(S,"vb1 with action=close",0)
+	
+	S = merge(vb1,go)
+	checkOneInstance(S,"vb1 with action=go",0)
+	
+	S = merge(vb1,pickup)
+	checkOneInstance(S,"vb1 with action=pickup",1)
+	
+	S = merge(vb1,drop)
+	checkOneInstance(S,"vb1 with action=drop",0)
+	
+	S = merge(vb2,pickup)
+	checkOneInstance(S,"vb2 with action=pickup",2)
+	
+	S = merge(vb3,pickup)
+	checkOneInstance(S,"vb3 with action=pickup",2)
+	
+	S = merge(vb3,go)
+	checkOneInstance(S,"vb3 with action=go",1)
+	
+	S = merge(vb3,drop)
+	checkOneInstance(S,"vb3 with action=drop",0)
+	
+	S = merge(vb4,drop)
+	checkOneInstance(S,"vb4 with action=drop",1)
+	
+	S = merge(vb4,go)
+	checkOneInstance(S,"vb4 with action=go",1)
+	
+	S = merge(vb4,pickup)
+	checkOneInstance(S,"vb4 with action=pickup",0) // I already have a key in my hand.
+	
+	S = merge(vb5,pickup)
+	checkOneInstance(S,"vb5 with action=pickup",0) // No key in current room.
+	
+	S = merge(vb6,go)
+	checkOneInstance(S,"vb6 with action=go",3) //Multiple open doors in the room.
+	
+	S = merge(vb6,close)
+	checkOneInstance(S,"vb6 with action=close",2) //Both doors are closeable.
+}
+
+procedure checkOneInstance(structure, structurename, nbModelsExpected){
+	stdoptions.nbmodels=nbModelsExpected+1
+	io.stderr:write("Testing "..structurename.."\n")
+	sols = modelexpand(deel1Theo, structure)
+	if #sols < nbModelsExpected then
+		io.stderr:write("Found not enough models(expected "..nbModelsExpected..") for "..structurename..".\n")
+		printmodels(sols)
+	else
+		if #sols > nbModelsExpected then
+			io.stderr:write("Found too much models(expected "..nbModelsExpected..") for "..structurename..".\n")
+			printmodels(sols)
+		else
+			io.stderr:write("Checks on "..structurename.." succeeded(expected "..nbModelsExpected..")\n")
+		end
+	end
+	
+	io.stderr:write("\n")
+}
