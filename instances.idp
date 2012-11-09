@@ -157,7 +157,7 @@ Action = { open; close; go; pickup; drop}
 	
 	Room = {A..B}
 	Door = {a}
-	Key = {ka;}
+	Key = {ka}
 	
 	Links = {a,A,B;}
 	Fits = {ka,a}
@@ -180,7 +180,7 @@ Action = { open; close; go; pickup; drop}
 	
 	Room = {A..B}
 	Door = {a}
-	Key = {ka;}
+	Key = {ka}
 	
 	Links = {a,A,B;}
 	Fits = {ka,a}
@@ -227,7 +227,7 @@ structure twoActions : deel1Voc{
 }
 	
 procedure check(){
-	
+	/*
 	//Pickup or no action are allowed. The rest cannot be set
 	checkOneInstance(vb1,"vb1",2)
 	
@@ -282,7 +282,7 @@ procedure check(){
 	checkOneInstance(S,"vb7 with action=open",0) //Geopende deur kan niet nogmaals geopend worden.
 	
 	S = merge(vb8,close)
-	checkOneInstance(S,"vb8 with action=close",0) //Gesloten deur kan niet nogmaals gesloten worden.
+	checkOneInstance(S,"vb8 with action=close",0) //Gesloten deur kan niet nogmaals gesloten worden.*/
 }
 
 procedure checkOneInstance(structure, structurename, nbModelsExpected){

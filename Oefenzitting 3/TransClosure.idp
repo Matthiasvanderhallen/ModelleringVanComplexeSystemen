@@ -1,0 +1,55 @@
+vocabulary TCVoc{
+	type Node
+	Edge(Node,Node)
+	
+	Reach(Node,Node) 	
+}
+
+theory FOTheo1: TCVoc{
+	!n1 n2: Edge(n1,n2)=> Reach(n1,n2).
+	!n1 n2 n3: Reach(n1,n2) & Reach(n2,n3) => Reach(n1,n3).
+}
+
+theory FOTheo2: TCVoc{
+	!n1 n2 n3:(Reach(n1,n3) |(Reach(n1,n2) & Reach(n2,n3))) <=> Reach(n1,n3).
+}
+
+theory FODOTTheory:TCVoc{
+	{
+		!n1 n2: Reach(n1,n2) <- Edge(n1,n2).
+		!n1 n3: Reach(n1,n3) <- ?n2 : Reach(n1,n2) & Reach(n2,n3).
+	}
+}
+structure TCStruc: TCVoc{
+	Node = {A..B}
+	Edge = {A,A}
+}
+
+procedure main(){
+	stdoptions.nbmodels = 0
+	sols = modelexpand(FOTheo1,TCStruc)
+	if #sols > 1 then
+		print("FOTheo1 gave me too much models")
+	else
+		print("Found the correct transitive closure using FOTheo1:")
+		print(sols[1])	
+	end
+	
+	sols2 = modelexpand(FOTheo2,TCStruc)
+	if #sols2 > 1 then
+		print("FOTheo2 gave me too much models")
+	else
+		print("Found the correct transitive closure using FOTheo2:")
+		print(sols2[1])	
+	end
+	
+	sols3 = modelexpand(FODOTTheory,TCStruc)
+	if #sols3 > 1 then
+		print("FODOTTheory gave me too much models")
+	else
+		print("Found the correct transitive closure using FODOTTheory. The solution is:")
+		print(sols3[1])	
+	end
+		
+}
+			

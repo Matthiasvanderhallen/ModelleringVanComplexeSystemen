@@ -1,0 +1,22 @@
+vocabulary GraphColorVoc{
+	type Node
+	Edge(Node,Node)
+	type Color
+	
+	ColorOf(Node):Color
+}
+
+theory GraphColorTheo: GraphColorVoc{
+	!x y: Edge(x,y) => ColorOf(x)~=ColorOf(y).
+}
+
+structure GraphColorInput: GraphColorVoc{
+	Node = {1..5}
+	Edge = {1,3;1,4;2,3;2,4;2,5;3,5}
+	Color = {B;R;G}
+}
+
+procedure main(){
+	print(modelexpand(GraphColorTheo,GraphColorInput)[1])
+}	
+

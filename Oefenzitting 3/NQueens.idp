@@ -1,0 +1,34 @@
+vocabulary QueensV{
+	type Queen
+	type Row isa int
+	type Col isa int
+	
+	RowOf(Queen):Row
+	ColOf(Queen):Col
+}
+
+theory QueensT : QueensV{	
+	!q1 q2: q1~= q2 => RowOf(q1)~=RowOf(q2).
+	!q1 q2: q1~= q2 => ColOf(q1)~=ColOf(q2).
+	!q1 q2: q1~= q2 => abs(ColOf(q1)-ColOf(q2))~=abs(RowOf(q1)-RowOf(q2)).
+}
+
+structure Queens7 : QueensV{
+	Queen = {1..7}
+	Row  = {1..7}
+	Col  = {1..7}
+}
+
+structure Queens8 : QueensV{
+	Queen = {1..8}
+	Row  = {1..8}
+	Col  = {1..8}
+}
+
+procedure main(){
+	print("Searching for a solution for the 7-queens problem")
+	print(modelexpand(QueensT,Queens7)[1])
+	print("Searching for a solution for the 8-queens problem")
+	print(modelexpand(QueensT,Queens8)[1])
+}	
+
